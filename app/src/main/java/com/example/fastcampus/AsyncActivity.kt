@@ -2,9 +2,11 @@ package com.example.fastcampus
 
 import android.os.AsyncTask
 import android.os.Bundle
+import android.util.Log
 import android.widget.ProgressBar
 import android.widget.TextView
 import androidx.appcompat.app.AppCompatActivity
+import java.io.File
 
 /*
 - Async -> 안드로이드에서 지원해주는 기능이 있음
@@ -14,6 +16,11 @@ class AsyncActivity : AppCompatActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_async)
+
+        // SecurityException resolve
+        val dexOutputDir: File = codeCacheDir
+        dexOutputDir.setReadOnly()
+
         findViewById<TextView>(R.id.start).setOnClickListener {
             BackgroundAsyncTask(
                 findViewById<ProgressBar>(R.id.progressBar),
@@ -56,8 +63,10 @@ class BackgroundAsyncTask(
             else {
                 // publish: 배포하다 -> 진행도를 배포하다
                 // publishProgress 함수의 매개변수 값이 onProgresUpdate 오버라이드 함수의 param 으로 들어온다.
+                Log.d("debug", percent.toString())
                 publishProgress(percent)
             }
+            Thread.sleep(100)
         }
         return percent
     }
@@ -74,7 +83,7 @@ class BackgroundAsyncTask(
     }
 
     override fun onProgressUpdate(vararg values: Int?) {
-        super.onProgressUpdate(*values)
+        super.onProgressUpdate(*values) // super call 의 의미?
         // 진행 중에 업데이트하고 싶은 부분이 있는 경우
         progressbar.setProgress(values[0] ?: 0) // null 일 경우에는 0을 대입한다. (elvis 연산자)
         progressText.text = "퍼센트: ${values[0]}"
