@@ -21,13 +21,19 @@ class AsyncActivity : AppCompatActivity() {
         val dexOutputDir: File = codeCacheDir
         dexOutputDir.setReadOnly()
 
-        findViewById<TextView>(R.id.start).setOnClickListener {
-            BackgroundAsyncTask(
-                findViewById<ProgressBar>(R.id.progressBar),
-                findViewById<TextView>(R.id.progressBarText)
-            ).execute()
-        }
+        val backgroundTask = BackgroundAsyncTask(
+            findViewById<ProgressBar>(R.id.progressBar),
+            findViewById<TextView>(R.id.progressBarText)
+        )
+
         // thread 의 경우 start 함수로 호출, AsyncTask 는 execute 로 실행
+        findViewById<TextView>(R.id.start).setOnClickListener {
+            backgroundTask.execute()
+        }
+
+        findViewById<TextView>(R.id.stop).setOnClickListener {
+            backgroundTask.cancel(true)
+        }
     }
 }
 
@@ -93,6 +99,7 @@ class BackgroundAsyncTask(
         super.onPostExecute(result)
         // post(이후, 끝) + execute(실행하다)
         // asyncTask 작업이 끝난 다음에 하고싶은 것
+        // ui 작업을 할 수 있음
         progressText.text = "작업이 완료되었습니다."
     }
 
