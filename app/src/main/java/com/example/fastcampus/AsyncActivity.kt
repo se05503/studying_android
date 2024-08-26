@@ -34,6 +34,11 @@ class AsyncActivity : AppCompatActivity() {
         findViewById<TextView>(R.id.stop).setOnClickListener {
             backgroundTask.cancel(true)
         }
+
+        // Async 방식인지 확인하는 과정
+        findViewById<TextView>(R.id.async).setOnClickListener {
+            Log.d("Async?", "yes")
+        }
     }
 }
 
