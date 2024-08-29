@@ -2,9 +2,9 @@ package com.example.fastcampus
 
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
-import androidx.room.ColumnInfo
-import androidx.room.Entity
-import androidx.room.PrimaryKey
+import android.widget.TextView
+import androidx.room.*
+import androidx.room.OnConflictStrategy.REPLACE
 
 /*
 Activity 생성할 때마다 하는 작업
@@ -20,6 +20,25 @@ class RoomActivity : AppCompatActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_room)
+
+        // 3번째 파라미터 : 데이터베이스 이름 (테이블 이름이 아니다)
+        // allowMainThreadQueries() -> 메인쓰레드에서 쿼리를 날리는 것을 허락한다 = 메인쓰레드에서 데이터베이스 조작을 하겠다.
+        // 데이터베이스 조작은 기본적으로 메인쓰레드에서 진행할 수 없다. -> 데이터베이스가 복잡하게 설계된 경우 처리 속도가 길어지는데 메인쓰레드에서 처리하면 처리하는 동안 사용자는 다른 일을 할 수 없기 때문이다.
+        // 1. Thread 2. AsyncTask -> 데이터베이스에 접근 및 관련 작업을 하면 됨
+        val database = Room.databaseBuilder(
+            applicationContext,
+            MyDatabase::class.java,
+            "user-database"
+        ).allowMainThreadQueries() // 가능하긴 하지만 좋은 방식은 아님
+            .build() // 데이터베이스 생성
+
+        findViewById<TextView>(R.id.save).setOnClickListener {
+            // 해당 userProfile 데이터를 데이터베이스에 저장하는 작업을 함
+            val userProfile = UserProfile(id = 1, fullName = "박세영", age = 24, gender = 'F')
+            database.userProfileDao().insert(userProfile)
+        }
+
+
     }
 }
 
@@ -32,11 +51,43 @@ class RoomActivity : AppCompatActivity() {
 - dao : 데이터에 접근하는 객체
 */
 
+// KClass -> class.java(x) class(o)
+@Database(entities = [UserProfile::class], version = 1)
+abstract class MyDatabase : RoomDatabase() {
+    /*
+    - version number : migration 을 위해서 필요하다.
+    - UserProfile (entity) 를 MyDatabase 가 관리한다.
+    - data base 자체를 여러개 만들어서 각각 관리하는 경우는 많진 않다. (하지만 가능하다.)
+     */
+    abstract fun userProfileDao(): UserProfileDao
+}
+
+@Dao
+interface UserProfileDao {
+    /*
+    - CRUD : 데이터베이스 조작
+    - Query : 데이터베이스 조회
+     */
+    @Insert(onConflict = REPLACE)
+    fun insert(userProfile: UserProfile)
+
+    @Delete
+    fun delete(userProfile: UserProfile)
+
+    @Query("SELECT * FROM userprofile")
+    fun getAll(): List<UserProfile>
+    // sql 문은 최적화가 어렵다. sql 문을 효율적으로 쓰기는 생각보다 어렵다.
+    // sql 을 따로 배우는건 안드로이드 공부가 어느정도 마무리된 이후에 해보는 것 추천한다.
+}
+
 @Entity
 class UserProfile(
-    @PrimaryKey val id: Int,
-    @ColumnInfo(name = "last_name")
-    val lastName: String,
-    @ColumnInfo(name = "first_name")
-    val firstName: String
+    @PrimaryKey val id: Int, // autoGenerate = true -> id 값이 자동으로 1씩 증가함
+    @ColumnInfo(name = "full_name")
+    val fullName: String,
+    @ColumnInfo(name = "age")
+    val age: Int,
+    @ColumnInfo(name = "gender")
+    val gender: Char
 )
+
