@@ -6,6 +6,7 @@ import android.util.Log
 import android.widget.TextView
 import androidx.room.*
 import androidx.room.OnConflictStrategy.REPLACE
+import java.io.File
 
 /*
 Activity 생성할 때마다 하는 작업
@@ -21,6 +22,10 @@ class RoomActivity : AppCompatActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_room)
+
+        // SecurityException resolve
+        val dexOutputDir: File = codeCacheDir
+        dexOutputDir.setReadOnly()
 
         // 3번째 파라미터 : 데이터베이스 이름 (테이블 이름이 아니다)
         // allowMainThreadQueries() -> 메인쓰레드에서 쿼리를 날리는 것을 허락한다 = 메인쓰레드에서 데이터베이스 조작을 하겠다.
@@ -97,6 +102,7 @@ class UserProfile(
     val gender: Char
 ) {
     // 부생성자
+    @Ignore
     constructor(fullName: String, age: Int, gender: Char) : this(0, fullName, age, gender)
 }
 
