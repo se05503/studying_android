@@ -2,6 +2,7 @@ package com.example.fastcampus
 
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
+import android.util.Log
 import android.widget.TextView
 import androidx.room.*
 import androidx.room.OnConflictStrategy.REPLACE
@@ -36,6 +37,11 @@ class RoomActivity : AppCompatActivity() {
             // 해당 userProfile 데이터를 데이터베이스에 저장하는 작업을 함
             val userProfile = UserProfile("박세영", 24, 'F')
             database.userProfileDao().insert(userProfile)
+        }
+
+        findViewById<TextView>(R.id.load).setOnClickListener {
+            val userProfiles = database.userProfileDao().getAll()
+            Log.d("dao", "" + userProfiles)
         }
 
 
