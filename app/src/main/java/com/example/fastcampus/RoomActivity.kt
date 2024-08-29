@@ -34,7 +34,7 @@ class RoomActivity : AppCompatActivity() {
 
         findViewById<TextView>(R.id.save).setOnClickListener {
             // 해당 userProfile 데이터를 데이터베이스에 저장하는 작업을 함
-            val userProfile = UserProfile(id = 1, fullName = "박세영", age = 24, gender = 'F')
+            val userProfile = UserProfile("박세영", 24, 'F')
             database.userProfileDao().insert(userProfile)
         }
 
@@ -82,12 +82,15 @@ interface UserProfileDao {
 
 @Entity
 class UserProfile(
-    @PrimaryKey val id: Int, // autoGenerate = true -> id 값이 자동으로 1씩 증가함
+    @PrimaryKey(autoGenerate = true) val id: Int, // autoGenerate = true -> id 값이 자동으로 1씩 증가함
     @ColumnInfo(name = "full_name")
     val fullName: String,
     @ColumnInfo(name = "age")
     val age: Int,
     @ColumnInfo(name = "gender")
     val gender: Char
-)
+) {
+    // 부생성자
+    constructor(fullName: String, age: Int, gender: Char) : this(0, fullName, age, gender)
+}
 
