@@ -46,9 +46,15 @@ class RoomActivity : AppCompatActivity() {
 
         findViewById<TextView>(R.id.load).setOnClickListener {
             val userProfiles = database.userProfileDao().getAll()
-            Log.d("dao", "" + userProfiles)
+            userProfiles.forEach {
+                Log.d("user", "" + it.id )
+                // 데이터베이스에 저장했기 때문에 휘발성이 아니다. -> 앱을 완전히 종료해도 데이터가 출력된다.
+            }
         }
 
+        findViewById<TextView>(R.id.delete).setOnClickListener {
+            database.userProfileDao().delete(2)
+        }
 
     }
 }
@@ -82,8 +88,8 @@ interface UserProfileDao {
     @Insert(onConflict = REPLACE)
     fun insert(userProfile: UserProfile)
 
-    @Delete
-    fun delete(userProfile: UserProfile)
+    @Query("DELETE FROM userprofile WHERE id = :userId")
+    fun delete(userId: Int)
 
     @Query("SELECT * FROM userprofile")
     fun getAll(): List<UserProfile>
