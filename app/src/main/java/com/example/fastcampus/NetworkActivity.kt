@@ -1,23 +1,37 @@
 package com.example.fastcampus
 
+import android.os.AsyncTask
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
+import android.util.Log
 import java.io.BufferedReader
+import java.io.File
 import java.io.InputStreamReader
 import java.net.HttpURLConnection
 import java.net.URL
 
-/*
-- NetworkOnMainThreadException
-네트워크 작업은 메인 쓰레드에서 진행하면 안됨. (요청을 보내고 서버로부터 응답을 받을때까지 메인쓰레드는 기다리게 되고 사용자의 input을 받을 수 없게 됨)
-메인 쓰레드에서는 UI 관련 작업만 해야함
-해결 방법: 쓰레드를 따로 만들어서 네트워크 작업을 해야한다.
- */
+
 class NetworkActivity : AppCompatActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_network)
 
+        // SecurityException resolve
+        val dexOutputDir: File = codeCacheDir
+        dexOutputDir.setReadOnly()
+
+        NetworkAsyncTask().execute()
+    }
+}
+
+/*
+- AsyncTask 는 deprecated 되었다.
+- AsyncTask 말고도 다른 좋은 방법이 있는데 그건 나중에 진행한다.
+통신 작업을 메인 쓰레드가 아닌 다른 쓰레드에서 하게 해야한다.
+doInBackground 에서 작성하는 코드는 메인 쓰레드가 아닌 다른 쓰레드에서 해당 코드가 동작할 수 있도록 해준다.
+ */
+class NetworkAsyncTask(): AsyncTask<Any?, Any?, Any?>() {
+    override fun doInBackground(vararg params: Any?): Any? {
         /*
         클라이언트가 서버에 요청을 보내는 부분
         - urlString: 요청할 주소
@@ -49,6 +63,11 @@ class NetworkActivity : AppCompatActivity() {
                 )
             )
             buffer = reader.readLine()
+            Log.d("buffer", buffer)
+        } else {
+            Log.d("network", "error")
         }
+        return null
     }
+
 }
