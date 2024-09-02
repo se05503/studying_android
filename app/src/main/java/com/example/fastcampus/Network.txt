@@ -64,3 +64,10 @@ null
 하나의 꺽쇠 = 하나의 객체 를 의미한다.
 android studio에서 File 에다가 .json 확장자로 파일을 만들 수 있다.
 IDE : postman(요청을 보냈을 때 응답을 받아볼 수 있는 도구)
+
+Serializing
+정의: 객체를 전송을 위한 데이터 포멧으로 바꾼다. Serializer : Serializing 을 하는 주체
+꼬챙이로 객체를 담는다.
+학생 객체(이름, 나이 등등..)
+클라이언트 -> 서버 로 데이터를 보낼 때  serializing 과정을 거친다.
+

@@ -53,6 +53,8 @@ class NetworkAsyncTask(): AsyncTask<Any?, Any?, Any?>() {
         UTF-8 : 사람이 알아들을 수 있는 범용적인 언어로 바꾸겠다.
         = 컴퓨터만 알아들을 수 있는 응답(connection.inputStream)을 사람이 알아들을 수 있는 언어(UTF-8)로 바꾸겠다.
         BufferedReader : buffer 공간을 마련해서, 해당 공간이 찰때까지 컴퓨터가 읽고 버퍼가 꽉 차면 사용자에게 알려주는 방식. ex. 1 2 3 읽고 1 2 3 을 알려준다.
+        HttpURLConnection : 안드로이드에서 기본으로 제공해주는 네트워크 모듈 -> 매우 번거로운 단점이 있음 (메인 쓰레드에서 작동X)
+        HttpURLConnection 방법을 대체하여 사용을 편하게 만들어준 라이브러리 -> Volly, Retrofit, OkHttp
          */
         var buffer = ""
         if(connection.responseCode == HttpURLConnection.HTTP_OK) {
