@@ -2,7 +2,12 @@ package com.example.fastcampus
 
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
+import android.util.Log
+import retrofit2.Call
+import retrofit2.Callback
+import retrofit2.Response
 import retrofit2.Retrofit
+import retrofit2.converter.gson.GsonConverterFactory
 
 /*
 Retrofit : 안드로이드에서 기본적으로 제공해주는 라이브러리가 아님 -> 직접 추가해야함
@@ -13,14 +18,46 @@ baseUrl은 .(점)을 기준으로 판단한다.
 ex) https://mellowcode.org/json/students/ 의 baseUrl -> https://mellowcode.org/
 addConverterFactory : 서버가 클라이언트에 데이터를 보낼 때, 알아들을 수 없는 데이터를 json 형태로 바꿔야 한다(convert).
 누가 convert 할 것인가? -> Gson
+Gson : 읽을 수 없는 데이터를 코틀린 클래스의 객체로 바꾸어줌, gson 도 안드로이드에서 기본적으로 제공해주는 라이브러리가 아님 -> 직접 추가해야함
+retrofit, gson 은 square 회사에서 만듬
  */
+
 class RetrofitActivity : AppCompatActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_retrofit)
 
+        // Builder pattern (처음: Builder, 중간: 어떤걸 어떻게 만들건가?, 마지막: build)
         val retrofit = Retrofit.Builder()
             .baseUrl("https://mellowcode.org/")
-            .addConverterFactory()
+            .addConverterFactory(GsonConverterFactory.create())
+            .build()
+
+        /*
+        queue(대기줄) : 작업을 하는데에 있어 줄을 세워놓겠다 -> 내 차례가 되면 실행이 됨
+        enqueue(queue 에다가 en 줄을 세우겠다)
+        callback : call (서버에 요청) 을 했을 때 back(서버의 응답)을 받겠다.
+        onResponse : 서버에서부터 응답이 제대로 온 경우
+        onFailure : 서버가 내 요청에 응답을 제대로 못한 경우
+         */
+        val retrofitService = retrofit.create(RetrofitService::class.java)
+        retrofitService.getStudentList().enqueue(object : Callback<ArrayList<StudentFromServer>> {
+            override fun onResponse(
+                call: Call<ArrayList<StudentFromServer>>,
+                response: Response<ArrayList<StudentFromServer>>
+            ) {
+                if(response.isSuccessful) {
+                    val studentList = response.body()
+                    studentList?.forEach{
+                        Log.d("student", ""+it.name)
+                    }
+                }
+            }
+
+            override fun onFailure(call: Call<ArrayList<StudentFromServer>>, t: Throwable) {
+                TODO("Not yet implemented")
+            }
+
+        })
     }
 }
