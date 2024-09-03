@@ -1,8 +1,13 @@
 package com.example.fastcampus
 
-import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
-import android.util.Log
+import android.view.LayoutInflater
+import android.view.View
+import android.view.ViewGroup
+import android.widget.TextView
+import androidx.appcompat.app.AppCompatActivity
+import androidx.recyclerview.widget.LinearLayoutManager
+import androidx.recyclerview.widget.RecyclerView
 import retrofit2.Call
 import retrofit2.Callback
 import retrofit2.Response
@@ -46,10 +51,13 @@ class RetrofitActivity : AppCompatActivity() {
                 call: Call<ArrayList<StudentFromServer>>,
                 response: Response<ArrayList<StudentFromServer>>
             ) {
-                if(response.isSuccessful) {
+                if (response.isSuccessful) {
                     val studentList = response.body()
-                    studentList?.forEach{
-                        Log.d("student", ""+it.name)
+                    findViewById<RecyclerView>(R.id.studentsRecyclerview).apply {
+                        this.adapter = StudentListRecyclerViewAdapter(
+                            studentList!!, LayoutInflater.from(this@RetrofitActivity)
+                        )
+                        this.layoutManager = LinearLayoutManager(this@RetrofitActivity)
                     }
                 }
             }
@@ -60,4 +68,38 @@ class RetrofitActivity : AppCompatActivity() {
 
         })
     }
+}
+
+class StudentListRecyclerViewAdapter(
+    var studentList: ArrayList<StudentFromServer>,
+    var inflater: LayoutInflater
+) : RecyclerView.Adapter<StudentListRecyclerViewAdapter.StudentViewHolder>() {
+
+    inner class StudentViewHolder(itemView: View) : RecyclerView.ViewHolder(itemView) {
+        val studentName: TextView
+        val studentAge: TextView
+        val studentIntro: TextView
+
+        init {
+            studentName = itemView.findViewById(R.id.student_name)
+            studentAge = itemView.findViewById(R.id.student_age)
+            studentIntro = itemView.findViewById(R.id.student_intro)
+        }
+    }
+
+    override fun getItemCount(): Int {
+        return studentList.size
+    }
+
+    override fun onBindViewHolder(holder: StudentViewHolder, position: Int) {
+        holder.studentName.text = studentList[position].name
+        holder.studentAge.text = studentList[position].age.toString()
+        holder.studentIntro.text = studentList[position].intro
+    }
+
+    override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): StudentViewHolder {
+        val view = inflater.inflate(R.layout.student_item, parent, false)
+        return StudentViewHolder(view)
+    }
+
 }
