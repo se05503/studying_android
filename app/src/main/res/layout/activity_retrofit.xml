@@ -9,6 +9,15 @@
     <androidx.recyclerview.widget.RecyclerView
         android:id="@+id/studentsRecyclerview"
         android:layout_width="match_parent"
-        android:layout_height="match_parent"/>
+        android:layout_height="200dp"/>
+
+    <TextView
+        android:id="@+id/registerStudent"
+        android:layout_width="match_parent"
+        android:layout_height="200dp"
+        android:gravity="center"
+        android:text="학생 서버에 등록"
+        android:textSize="20sp"
+        android:background="@android:color/holo_green_light"/>
 
 </androidx.appcompat.widget.LinearLayoutCompat>

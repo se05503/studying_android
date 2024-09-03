@@ -1,6 +1,7 @@
 package com.example.fastcampus
 
 import android.os.Bundle
+import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -8,6 +9,7 @@ import android.widget.TextView
 import androidx.appcompat.app.AppCompatActivity
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
+import org.w3c.dom.Text
 import retrofit2.Call
 import retrofit2.Callback
 import retrofit2.Response
@@ -67,6 +69,31 @@ class RetrofitActivity : AppCompatActivity() {
             }
 
         })
+
+        findViewById<TextView>(R.id.registerStudent).setOnClickListener {
+            val student = HashMap<String, Any>()
+            // 아이디는 자동적으로 증가하게 설정되어 있어서 굳이 id를 넘겨줄 필요가 없다. (서버에서 알아서 한다)
+            student.put("name", "홍길동")
+            student.put("age", 20)
+            student.put("intro", "안녕하세요")
+            retrofitService.registerStudent(student).enqueue(object : Callback<StudentFromServer>{
+                override fun onResponse(
+                    call: Call<StudentFromServer>,
+                    response: Response<StudentFromServer>
+                ) {
+                    Log.d("onResponse", response.message())
+                    if(response.isSuccessful) {
+                        val student = response.body()
+                        Log.d("response success", "student: "+student?.name)
+                    }
+                }
+
+                override fun onFailure(call: Call<StudentFromServer>, t: Throwable) {
+                    Log.d("server", "response failure")
+                }
+
+            })
+        }
     }
 }
 
