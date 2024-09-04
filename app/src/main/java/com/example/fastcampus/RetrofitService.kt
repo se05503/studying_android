@@ -15,7 +15,10 @@ class PostFromServer(
     val id: Int,
     val title: String,
     val body: String
-)
+) {
+    // 부생성자 생성
+    constructor(title: String, body: String): this(0, 0, title, body)
+}
 
 /*
 url 하나에 대해서 여러 요청을 보낼 수 있다. -> GET, POST
@@ -28,8 +31,15 @@ interface RetrofitService {
     @GET("posts")
     fun getPostList(): Call<ArrayList<PostFromServer>>
 
+    // 근본
     @POST("posts")
-    fun registerStudent(
+    fun registerPost(
         @Body params: HashMap<String, Any>
+    ): Call<PostFromServer>
+
+    // 개발자가 이해하기 좀 더 편한 코드 (컴퓨터는 결국 PostFromServer 객체가 아닌 HashMap 으로 알아들음)
+    @POST("posts")
+    fun easyRegisterPost(
+        @Body post: PostFromServer
     ): Call<PostFromServer>
 }
