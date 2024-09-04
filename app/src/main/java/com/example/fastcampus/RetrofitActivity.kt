@@ -15,6 +15,7 @@ import retrofit2.Callback
 import retrofit2.Response
 import retrofit2.Retrofit
 import retrofit2.converter.gson.GsonConverterFactory
+import java.io.File
 
 /*
 Retrofit : 안드로이드에서 기본적으로 제공해주는 라이브러리가 아님 -> 직접 추가해야함
@@ -33,6 +34,10 @@ class RetrofitActivity : AppCompatActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_retrofit)
+
+        // SecurityException resolve
+        val dexOutputDir: File = codeCacheDir
+        dexOutputDir.setReadOnly()
 
         // Builder pattern (처음: Builder, 중간: 어떤걸 어떻게 만들건가?, 마지막: build)
         val retrofit = Retrofit.Builder()
@@ -81,7 +86,7 @@ class RetrofitActivity : AppCompatActivity() {
             // 아이디는 자동적으로 증가하게 설정되어 있어서 굳이 id를 넘겨줄 필요가 없다. (서버에서 알아서 한다)
             post["title"] = "New Post Title"
             post["body"] = "New Post Content"
-            retrofitService.registerStudent(post).enqueue(object : Callback<PostFromServer> {
+            retrofitService.registerPost(post).enqueue(object : Callback<PostFromServer> {
                 override fun onResponse(
                     call: Call<PostFromServer>,
                     response: Response<PostFromServer>
@@ -89,8 +94,26 @@ class RetrofitActivity : AppCompatActivity() {
                     Log.d("onResponse", response.message())
                     if (response.isSuccessful) {
                         val post = response.body()
-                        Log.d("response success", "post: " + post?.title)
+                        Log.d("button 1 response", "post: " + post?.title)
                     }
+                }
+
+                override fun onFailure(call: Call<PostFromServer>, t: Throwable) {
+                    Log.d("server", "response failure")
+                }
+
+            })
+        }
+
+        findViewById<TextView>(R.id.easyRegisterPost).setOnClickListener {
+            val post = PostFromServer(title = "나는야 휴학생", body = "배달음식 시켜먹고 싶다")
+            retrofitService.easyRegisterPost(post).enqueue(object : Callback<PostFromServer> {
+                override fun onResponse(
+                    call: Call<PostFromServer>,
+                    response: Response<PostFromServer>
+                ) {
+                    val post = response.body()
+                    Log.d("button 2 response", "post: "+post?.body)
                 }
 
                 override fun onFailure(call: Call<PostFromServer>, t: Throwable) {
