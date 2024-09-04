@@ -10,11 +10,11 @@ Retrofit 으로 요청을 하는데, 요청을 할 때마다 받아오는 객체
 어떤 객체가 올건지 적어줌
  */
 
-class StudentFromServer(
+class PostFromServer(
+    val userId: Int,
     val id: Int,
-    val name: String,
-    val age: Int,
-    val intro: String
+    val title: String,
+    val body: String
 )
 
 /*
@@ -25,11 +25,11 @@ HashMap<key,value> -> Hash 는 사람이 읽을 수 없는 형태.
  */
 interface RetrofitService {
     // 요청을 보냄 -> Retrofit 은 Call 로 한번 감싸야 한다. (문법)
-    @GET("json/students")
-    fun getStudentList(): Call<ArrayList<StudentFromServer>>
+    @GET("posts")
+    fun getPostList(): Call<ArrayList<PostFromServer>>
 
-    @POST("json/students/")
+    @POST("posts")
     fun registerStudent(
         @Body params: HashMap<String, Any>
-    ): Call<StudentFromServer>
+    ): Call<PostFromServer>
 }

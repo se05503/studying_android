@@ -7,9 +7,9 @@ import android.view.View
 import android.view.ViewGroup
 import android.widget.TextView
 import androidx.appcompat.app.AppCompatActivity
+import androidx.recyclerview.widget.DividerItemDecoration
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
-import org.w3c.dom.Text
 import retrofit2.Call
 import retrofit2.Callback
 import retrofit2.Response
@@ -36,7 +36,7 @@ class RetrofitActivity : AppCompatActivity() {
 
         // Builder pattern (처음: Builder, 중간: 어떤걸 어떻게 만들건가?, 마지막: build)
         val retrofit = Retrofit.Builder()
-            .baseUrl("https://mellowcode.org/")
+            .baseUrl("https://jsonplaceholder.typicode.com/")
             .addConverterFactory(GsonConverterFactory.create())
             .build()
 
@@ -48,47 +48,52 @@ class RetrofitActivity : AppCompatActivity() {
         onFailure : 서버가 내 요청에 응답을 제대로 못한 경우
          */
         val retrofitService = retrofit.create(RetrofitService::class.java)
-        retrofitService.getStudentList().enqueue(object : Callback<ArrayList<StudentFromServer>> {
+        retrofitService.getPostList().enqueue(object : Callback<ArrayList<PostFromServer>> {
             override fun onResponse(
-                call: Call<ArrayList<StudentFromServer>>,
-                response: Response<ArrayList<StudentFromServer>>
+                call: Call<ArrayList<PostFromServer>>,
+                response: Response<ArrayList<PostFromServer>>
             ) {
                 if (response.isSuccessful) {
-                    val studentList = response.body()
-                    findViewById<RecyclerView>(R.id.studentsRecyclerview).apply {
-                        this.adapter = StudentListRecyclerViewAdapter(
-                            studentList!!, LayoutInflater.from(this@RetrofitActivity)
+                    val postList = response.body()
+                    findViewById<RecyclerView>(R.id.postsRecyclerview).apply {
+                        this.adapter = PostListRecyclerViewAdapter(
+                            postList!!, LayoutInflater.from(this@RetrofitActivity)
                         )
                         this.layoutManager = LinearLayoutManager(this@RetrofitActivity)
+                        this.addItemDecoration(
+                            DividerItemDecoration(
+                                this@RetrofitActivity,
+                                LinearLayoutManager.VERTICAL
+                            )
+                        )
                     }
                 }
             }
 
-            override fun onFailure(call: Call<ArrayList<StudentFromServer>>, t: Throwable) {
+            override fun onFailure(call: Call<ArrayList<PostFromServer>>, t: Throwable) {
                 TODO("Not yet implemented")
             }
 
         })
 
-        findViewById<TextView>(R.id.registerStudent).setOnClickListener {
-            val student = HashMap<String, Any>()
+        findViewById<TextView>(R.id.registerPost).setOnClickListener {
+            val post = HashMap<String, Any>()
             // 아이디는 자동적으로 증가하게 설정되어 있어서 굳이 id를 넘겨줄 필요가 없다. (서버에서 알아서 한다)
-            student.put("name", "홍길동")
-            student.put("age", 20)
-            student.put("intro", "안녕하세요")
-            retrofitService.registerStudent(student).enqueue(object : Callback<StudentFromServer>{
+            post["title"] = "New Post Title"
+            post["body"] = "New Post Content"
+            retrofitService.registerStudent(post).enqueue(object : Callback<PostFromServer> {
                 override fun onResponse(
-                    call: Call<StudentFromServer>,
-                    response: Response<StudentFromServer>
+                    call: Call<PostFromServer>,
+                    response: Response<PostFromServer>
                 ) {
                     Log.d("onResponse", response.message())
-                    if(response.isSuccessful) {
-                        val student = response.body()
-                        Log.d("response success", "student: "+student?.name)
+                    if (response.isSuccessful) {
+                        val post = response.body()
+                        Log.d("response success", "post: " + post?.title)
                     }
                 }
 
-                override fun onFailure(call: Call<StudentFromServer>, t: Throwable) {
+                override fun onFailure(call: Call<PostFromServer>, t: Throwable) {
                     Log.d("server", "response failure")
                 }
 
@@ -97,36 +102,33 @@ class RetrofitActivity : AppCompatActivity() {
     }
 }
 
-class StudentListRecyclerViewAdapter(
-    var studentList: ArrayList<StudentFromServer>,
+class PostListRecyclerViewAdapter(
+    var postList: ArrayList<PostFromServer>,
     var inflater: LayoutInflater
-) : RecyclerView.Adapter<StudentListRecyclerViewAdapter.StudentViewHolder>() {
+) : RecyclerView.Adapter<PostListRecyclerViewAdapter.PostViewHolder>() {
 
-    inner class StudentViewHolder(itemView: View) : RecyclerView.ViewHolder(itemView) {
-        val studentName: TextView
-        val studentAge: TextView
-        val studentIntro: TextView
+    inner class PostViewHolder(itemView: View) : RecyclerView.ViewHolder(itemView) {
+        val postTitle: TextView
+        val postContent: TextView
 
         init {
-            studentName = itemView.findViewById(R.id.student_name)
-            studentAge = itemView.findViewById(R.id.student_age)
-            studentIntro = itemView.findViewById(R.id.student_intro)
+            postTitle = itemView.findViewById(R.id.post_title)
+            postContent = itemView.findViewById(R.id.post_content)
         }
     }
 
     override fun getItemCount(): Int {
-        return studentList.size
+        return postList.size
     }
 
-    override fun onBindViewHolder(holder: StudentViewHolder, position: Int) {
-        holder.studentName.text = studentList[position].name
-        holder.studentAge.text = studentList[position].age.toString()
-        holder.studentIntro.text = studentList[position].intro
+    override fun onBindViewHolder(holder: PostViewHolder, position: Int) {
+        holder.postTitle.text = postList[position].title
+        holder.postContent.text = postList[position].body
     }
 
-    override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): StudentViewHolder {
-        val view = inflater.inflate(R.layout.student_item, parent, false)
-        return StudentViewHolder(view)
+    override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): PostViewHolder {
+        val view = inflater.inflate(R.layout.post_item, parent, false)
+        return PostViewHolder(view)
     }
 
 }
