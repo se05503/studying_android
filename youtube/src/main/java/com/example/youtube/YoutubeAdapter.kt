@@ -9,11 +9,11 @@ import android.view.ViewGroup
 import android.widget.ImageView
 import android.widget.TextView
 import androidx.recyclerview.widget.RecyclerView
+import com.bumptech.glide.Glide
 
 class YoutubeAdapter(
     var videoItems: ArrayList<VideoItem>,
     var inflater: LayoutInflater,
-    var contentResolver: ContentResolver
 ) : RecyclerView.Adapter<YoutubeAdapter.YoutubeViewHolder>() {
 
     inner class YoutubeViewHolder(view: View) : RecyclerView.ViewHolder(view) {
@@ -34,14 +34,9 @@ class YoutubeAdapter(
     }
 
     override fun onBindViewHolder(holder: YoutubeViewHolder, position: Int) {
-        // 여기만 해결되면 서버에서 응답이 잘 오는지 확인할 수 있음
-        // 필요한 데이터만 뷰에 세팅해주면 됨
-        // 이미지는 glide 안쓰고 한번 작성해보기
-        val thumbnailString = videoItems[position].thumbnail
-        val thumbnailUri = Uri.parse(thumbnailString)
-        var inputStream = contentResolver.openInputStream(thumbnailUri)
-        var bitmap = BitmapFactory.decodeStream(inputStream)
-        holder.videoThumbnail.setImageBitmap(bitmap)
+        Glide.with(holder.videoThumbnail) // with 설정이 맞는지 잘 모르겠음 -> 작동은 함
+            .load(videoItems[position].thumbnail) // string 을 Uri 로 안바꿔도 된다!
+            .into(holder.videoThumbnail)
         holder.videoTitle.text = videoItems[position].title
         holder.videoDescription.text = videoItems[position].content
     }

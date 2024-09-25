@@ -5,15 +5,13 @@ import android.util.Log
 import android.view.LayoutInflater
 import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
-import androidx.recyclerview.widget.DividerItemDecoration
-import androidx.recyclerview.widget.LinearLayoutManager
 import com.example.youtube.databinding.ActivityMainBinding
 import retrofit2.Call
 import retrofit2.Callback
 import retrofit2.Response
-import java.io.File
 import retrofit2.Retrofit
 import retrofit2.converter.gson.GsonConverterFactory
+import java.io.File
 
 class MainActivity : AppCompatActivity() {
     lateinit var binding: ActivityMainBinding
@@ -39,18 +37,22 @@ class MainActivity : AppCompatActivity() {
                 response: Response<ArrayList<VideoItem>>
             ) {
                 Log.d("onResponse", response.message())
-                if(response.isSuccessful) {
+                if(response.isSuccessful) { // if else 문 지워도 될 것 같음 (내 생각)
                     val videoList = response.body()
-                    binding.recyclerview.layoutManager = LinearLayoutManager(this@MainActivity)
-                    binding.recyclerview.adapter = YoutubeAdapter(videoList!!, LayoutInflater.from(this@MainActivity), contentResolver)
-                    binding.recyclerview.addItemDecoration(DividerItemDecoration(this@MainActivity, LinearLayoutManager.VERTICAL))
+                    videoList!!.forEach {
+                        Log.d("server", it.title)
+                    }
+                    binding.recyclerview.adapter = YoutubeAdapter(videoList, LayoutInflater.from(this@MainActivity))
                 } else {
                     Log.d("server response : ","isNotSuccessful")
                 }
             }
 
             override fun onFailure(call: Call<ArrayList<VideoItem>>, t: Throwable) {
-                Log.d("server response : ","onFailure")
+                // t: 예외
+                // t.message: 어떤 예외가 발생했는지 알려주는 메세지
+                // CLEARTEXT communication to mellowcode.org not permitted by network security policy
+                Log.d("server response : ", t.message!!)
                 Toast.makeText(this@MainActivity, "서버 연결이 불안정합니다", Toast.LENGTH_LONG).show()
             }
 
