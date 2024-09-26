@@ -7,6 +7,10 @@ android {
     namespace 'com.example.melone'
     compileSdk 34
 
+    viewBinding {
+        enabled = true
+    }
+
     defaultConfig {
         applicationId "com.example.melone"
         minSdk 21
