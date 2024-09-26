@@ -1,19 +1,20 @@
 package com.example.youtube
 
-import android.content.ContentResolver
-import android.graphics.BitmapFactory
-import android.net.Uri
+import android.content.Context
+import android.content.Intent
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.ImageView
 import android.widget.TextView
 import androidx.recyclerview.widget.RecyclerView
-import com.bumptech.glide.Glide
+import com.bumptech.glide.RequestManager
 
 class YoutubeAdapter(
     var videoItems: ArrayList<VideoItem>,
     var inflater: LayoutInflater,
+    val glide: RequestManager,
+    val context: Context // 상세 페이지 이동할 때 필요
 ) : RecyclerView.Adapter<YoutubeAdapter.YoutubeViewHolder>() {
 
     inner class YoutubeViewHolder(view: View) : RecyclerView.ViewHolder(view) {
@@ -25,6 +26,14 @@ class YoutubeAdapter(
             videoThumbnail = view.findViewById(R.id.iv_thumbnail)
             videoTitle = view.findViewById(R.id.tv_title)
             videoDescription = view.findViewById(R.id.tv_description)
+
+            // click listener
+            // View, context, adapterPosition
+            view.setOnClickListener {
+                val intent = Intent(context, VideoActivity::class.java)
+                intent.putExtra("video_url", videoItems[adapterPosition].video)
+                context.startActivity(intent)
+            }
         }
     }
 
@@ -34,9 +43,7 @@ class YoutubeAdapter(
     }
 
     override fun onBindViewHolder(holder: YoutubeViewHolder, position: Int) {
-        Glide.with(holder.videoThumbnail) // with 설정이 맞는지 잘 모르겠음 -> 작동은 함
-            .load(videoItems[position].thumbnail) // string 을 Uri 로 안바꿔도 된다!
-            .into(holder.videoThumbnail)
+        glide.load(videoItems[position].thumbnail).centerCrop().into(holder.videoThumbnail)
         holder.videoTitle.text = videoItems[position].title
         holder.videoDescription.text = videoItems[position].content
     }

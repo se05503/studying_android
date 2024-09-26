@@ -5,6 +5,7 @@ import android.util.Log
 import android.view.LayoutInflater
 import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
+import com.bumptech.glide.Glide
 import com.example.youtube.databinding.ActivityMainBinding
 import retrofit2.Call
 import retrofit2.Callback
@@ -36,16 +37,16 @@ class MainActivity : AppCompatActivity() {
                 call: Call<ArrayList<VideoItem>>,
                 response: Response<ArrayList<VideoItem>>
             ) {
-                Log.d("onResponse", response.message())
-                if(response.isSuccessful) { // if else 문 지워도 될 것 같음 (내 생각)
-                    val videoList = response.body()
-                    videoList!!.forEach {
-                        Log.d("server", it.title)
-                    }
-                    binding.recyclerview.adapter = YoutubeAdapter(videoList, LayoutInflater.from(this@MainActivity))
-                } else {
-                    Log.d("server response : ","isNotSuccessful")
-                }
+                val videoList = response.body()
+                val glide = Glide.with(this@MainActivity)
+                // Activity 에서 Adapter 로 필요한 parameter(layout, context 등) 을 넣어준다.
+                binding.recyclerview.adapter =
+                    YoutubeAdapter(
+                        videoList!!,
+                        LayoutInflater.from(this@MainActivity),
+                        glide,
+                        this@MainActivity
+                    )
             }
 
             override fun onFailure(call: Call<ArrayList<VideoItem>>, t: Throwable) {
