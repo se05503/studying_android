@@ -3,6 +3,8 @@ package com.example.melone
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import android.util.Log
+import android.view.LayoutInflater
+import com.bumptech.glide.Glide
 import com.example.melone.databinding.ActivityMainBinding
 import retrofit2.Call
 import retrofit2.Callback
@@ -36,9 +38,12 @@ class MainActivity : AppCompatActivity() {
             ) {
                 Log.d("server response: ", response.message())
                 val melonItems = response.body()
-                melonItems?.forEach {
-                    Log.d("response: ", it.title)
-                }
+                binding.recyclerview.adapter = MelonAdapter(
+                    melonItems!!,
+                    this@MainActivity,
+                    LayoutInflater.from(this@MainActivity),
+                    Glide.with(this@MainActivity)
+                )
             }
 
             override fun onFailure(call: Call<ArrayList<MelonItem>>, t: Throwable) {
@@ -46,5 +51,17 @@ class MainActivity : AppCompatActivity() {
 
             }
         })
+
+        binding.ivPlayBack.setOnClickListener {
+
+        }
+        binding.ivPlay.setOnClickListener {
+
+        }
+        binding.ivPlayNext.setOnClickListener {
+
+        }
+
+
     }
 }
