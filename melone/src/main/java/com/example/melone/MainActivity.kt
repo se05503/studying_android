@@ -26,31 +26,36 @@ class MainActivity : AppCompatActivity() {
 
         // Network data 가져오기
         val retrofit = Retrofit.Builder()
-            .baseUrl("http://mellowcode.org/")
+            .baseUrl("https://api.jamendo.com/")
             .addConverterFactory(GsonConverterFactory.create())
             .build()
 
         val retrofitService = retrofit.create(NetworkService::class.java)
-        retrofitService.getMelonItems().enqueue(object : Callback<ArrayList<MelonItem>> {
-            override fun onResponse(
-                call: Call<ArrayList<MelonItem>>,
-                response: Response<ArrayList<MelonItem>>
-            ) {
-                Log.d("server response: ", response.message())
-                val melonItems = response.body()
-                binding.recyclerview.adapter = MelonAdapter(
-                    melonItems!!,
-                    this@MainActivity,
-                    LayoutInflater.from(this@MainActivity),
-                    Glide.with(this@MainActivity)
-                )
-            }
+        retrofitService.getMelonItems(clientId = "your_key", artistName = "WE ARE FM")
+            .enqueue(object : Callback<MelonResponse> {
+                override fun onResponse(
+                    call: Call<MelonResponse>,
+                    response: Response<MelonResponse>
+                ) {
+                    if(response.isSuccessful) {
+                        val melonResponse = response.body()
+                        binding.recyclerview.apply {
+                            adapter = MelonAdapter(
+                                melonItems = melonResponse!!.results,
+                                context = this@MainActivity,
+                                glide = Glide.with(this@MainActivity),
+                                inflater = LayoutInflater.from(this@MainActivity)
+                            )
+                        }
+                        binding.tvArtistName.text = melonResponse!!.results[0].artistName
+                    }
+                }
 
-            override fun onFailure(call: Call<ArrayList<MelonItem>>, t: Throwable) {
-                Log.d("server response: ", t.message!!)
+                override fun onFailure(call: Call<MelonResponse>, t: Throwable) {
+                    Log.d("server response", t.message!!)
+                }
 
-            }
-        })
+            })
 
         binding.ivPlayBack.setOnClickListener {
 

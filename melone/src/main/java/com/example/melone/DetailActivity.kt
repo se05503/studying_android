@@ -11,9 +11,12 @@ class DetailActivity : AppCompatActivity() {
         super.onCreate(savedInstanceState)
         binding = ActivityDetailBinding.inflate(layoutInflater)
         setContentView(binding.root)
+
         val thumbnail = intent.getStringExtra("thumbnail")
         val title = intent.getStringExtra("title")
-        Glide.with(this@DetailActivity).load(thumbnail).into(binding.ivSongThumbnail)
+        val audio = intent.getStringExtra("audio")
+
         binding.tvSongTitle.text = title
+        Glide.with(this@DetailActivity).load(thumbnail).into(binding.ivSongThumbnail)
     }
 }

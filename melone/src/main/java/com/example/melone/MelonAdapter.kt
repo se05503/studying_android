@@ -11,7 +11,7 @@ import androidx.recyclerview.widget.RecyclerView
 import com.bumptech.glide.RequestManager
 
 class MelonAdapter(
-    val melonItems: ArrayList<MelonItem>,
+    val melonItems: List<MelonItem>,
     val context: Context,
     val inflater: LayoutInflater,
     val glide: RequestManager
@@ -20,13 +20,16 @@ class MelonAdapter(
     inner class MelonViewHolder(view: View): RecyclerView.ViewHolder(view) {
         val thumbnail: ImageView
         val title: TextView
+        val playButton: ImageView
         init {
             thumbnail = view.findViewById(R.id.iv_thumbnail)
             title = view.findViewById(R.id.tv_title)
-            view.setOnClickListener {
+            playButton = view.findViewById(R.id.iv_play)
+            playButton.setOnClickListener {
                 val intent = Intent(context, DetailActivity::class.java)
-                intent.putExtra("thumbnail", melonItems[adapterPosition].thumbnail)
-                intent.putExtra("title", melonItems[adapterPosition].title)
+                intent.putExtra("thumbnail", melonItems[0].image)
+                intent.putExtra("title", melonItems[0].tracks[adapterPosition].name)
+                intent.putExtra("audio",melonItems[0].tracks[adapterPosition].audio)
                 context.startActivity(intent)
             }
         }
@@ -38,12 +41,12 @@ class MelonAdapter(
     }
 
     override fun getItemCount(): Int {
-        return melonItems.size
+        return melonItems[0].tracks.size
     }
 
     override fun onBindViewHolder(holder: MelonViewHolder, position: Int) {
-        holder.title.text = melonItems[position].title
-        glide.load(melonItems[position].thumbnail).centerCrop()
+        holder.title.text = melonItems[0].tracks[position].name
+        glide.load(melonItems[0].image).centerCrop()
             .into(holder.thumbnail)
     }
 

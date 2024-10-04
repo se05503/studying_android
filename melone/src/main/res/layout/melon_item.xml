@@ -3,12 +3,13 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:orientation="horizontal"
     android:layout_width="match_parent"
-    android:layout_height="70dp">
+    android:padding="10dp"
+    android:layout_height="wrap_content">
 
     <ImageView
         android:id="@+id/iv_thumbnail"
-        android:layout_width="70dp"
-        android:layout_height="match_parent"
+        android:layout_width="80dp"
+        android:layout_height="80dp"
         tools:src="@drawable/temp"/>
 
     <TextView
@@ -21,5 +22,12 @@
         android:textSize="24sp"
         android:textColor="@color/white"
         tools:text="Song Title"/>
+
+    <ImageView
+        android:padding="20dp"
+        android:id="@+id/iv_play"
+        android:layout_width="wrap_content"
+        android:layout_height="match_parent"
+        android:src="@drawable/ic_play"/>
 
 </LinearLayout>
