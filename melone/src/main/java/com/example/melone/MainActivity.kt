@@ -31,7 +31,7 @@ class MainActivity : AppCompatActivity() {
             .build()
 
         val retrofitService = retrofit.create(NetworkService::class.java)
-        retrofitService.getMelonItems(clientId = "your_key", artistName = "WE ARE FM")
+        retrofitService.getMelonItems(clientId = "6f1d3557", artistName = "WE ARE FM")
             .enqueue(object : Callback<MelonResponse> {
                 override fun onResponse(
                     call: Call<MelonResponse>,
