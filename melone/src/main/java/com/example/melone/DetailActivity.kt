@@ -33,8 +33,6 @@ class DetailActivity : AppCompatActivity() {
         val melonItems = intent.getSerializableExtra("melonItems") as ArrayList<MelonItem>
         val currentPosition = intent.getIntExtra("current_position", -1)
 
-        mediaPlayer = MediaPlayer.create(this@DetailActivity, Uri.parse(melonItems[0].tracks[currentPosition].audio))
-
 //        mediaPlayer = MediaPlayer().apply {
 //            setAudioAttributes(
 //                AudioAttributes.Builder()
@@ -53,10 +51,10 @@ class DetailActivity : AppCompatActivity() {
         binding.ivPlay.setOnClickListener {
             if(isPlaying) {
                 isPlaying = false
-                mediaPlayer.pause()
+                mediaPlayer.stop()
             } else {
                 isPlaying = true
-                mediaPlayer.start()
+                playMelonItem(melonItems[0].tracks[currentPosition].audio)
             }
         }
 
@@ -100,29 +98,8 @@ class DetailActivity : AppCompatActivity() {
 //        }
     }
 
-    override fun onResume() {
-        super.onResume()
-        Log.d("detailActivity","onResume")
-    }
-
-    override fun onRestart() {
-        super.onRestart()
-        Log.d("detailActivity","onRestart")
-    }
-
-    override fun onPause() {
-        super.onPause()
-        Log.d("detailActivity","onPause")
-    }
-
-    override fun onStop() {
-        super.onStop()
-        Log.d("detailActivity","onStop")
-    }
-
-    override fun onDestroy() {
-        super.onDestroy()
-        Log.d("detailActivity","onDestroy")
-        mediaPlayer.release()
+    private fun playMelonItem(audio: String) {
+        mediaPlayer = MediaPlayer.create(this@DetailActivity, Uri.parse(audio))
+        mediaPlayer.start()
     }
 }
