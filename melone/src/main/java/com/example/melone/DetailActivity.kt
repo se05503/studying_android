@@ -6,6 +6,7 @@ import android.net.Uri
 import android.os.Bundle
 import android.util.Log
 import androidx.appcompat.app.AppCompatActivity
+import com.bumptech.glide.Glide
 import com.example.melone.databinding.ActivityDetailBinding
 
 class DetailActivity : AppCompatActivity() {
@@ -13,6 +14,7 @@ class DetailActivity : AppCompatActivity() {
     lateinit var mediaPlayer : MediaPlayer
 
     // setter 사용 -> 변수 상태를 따로 관리하여 유지보수를 용이하게 한다. 변수와 뷰를 바인딩시킨다.
+    // 액티비티의 생명주기에 간섭받지 않는다. 상태가 바뀌면 바로 뷰에 반영된다.
     var isPlaying = false
         set(value) {
             if(value) {
@@ -31,75 +33,60 @@ class DetailActivity : AppCompatActivity() {
 
         // adapter에서 분해되서 온 재료를 ArrayList<MelonItem> 형태로 만들겠다!
         val melonItems = intent.getSerializableExtra("melonItems") as ArrayList<MelonItem>
-        val currentPosition = intent.getIntExtra("current_position", -1)
+        var currentPosition = intent.getIntExtra("current_position", -1)
 
-//        mediaPlayer = MediaPlayer().apply {
-//            setAudioAttributes(
-//                AudioAttributes.Builder()
-//                    .setContentType(AudioAttributes.CONTENT_TYPE_MUSIC)
-//                    .setUsage(AudioAttributes.USAGE_MEDIA)
-//                    .build()
-//            )
-//        }
+        binding.tvSongTitle.text = melonItems[0].tracks[currentPosition].name
+        Glide.with(this@DetailActivity).load(melonItems[0].image).into(binding.ivSongThumbnail)
 
-//        val thumbnail = intent.getStringExtra("thumbnail")
-//         ArrayList<TrackItem> 를 받아올 수 없다. (data class 를 받아올 수 없다) ArrayList<String> 형태로 받아와야 한다.
-//        val titles = intent.getStringArrayListExtra("titles")
-//        val audios = intent.getStringArrayListExtra("audios")
-
+        // 재생 버튼을 누르지 않은 상태에서 다음 버튼이나 이전 버튼을 누르게 되면
+        // 초기화되지 않은(lateinit) mediaPlayer 을 호출하게 되는 문제를 setOnClickListener 밖으로 빼면서 해결
+        mediaPlayer = MediaPlayer.create(this@DetailActivity, Uri.parse(melonItems[0].tracks[currentPosition].audio))
 
         binding.ivPlay.setOnClickListener {
             if(isPlaying) {
                 isPlaying = false
-                mediaPlayer.stop()
+                mediaPlayer.pause()
             } else {
                 isPlaying = true
                 playMelonItem(melonItems[0].tracks[currentPosition].audio)
             }
         }
 
-//        binding.tvSongTitle.text = titles!![currentPosition]
-//        Glide.with(this@DetailActivity).load(thumbnail).into(binding.ivSongThumbnail)
-//
-//        binding.ivPlay.setOnClickListener {
-//            when (isPlaying) {
-//                true -> {
-//                    isPlaying = false
-//                    binding.ivPlay.setImageResource(R.drawable.ic_play)
-//                    mediaPlayer?.stop()
-//                    mediaPlayer?.release()
-//                    mediaPlayer = null
-//                }
-//                false -> {
-//                    isPlaying = true
-//                    binding.ivPlay.setImageResource(R.drawable.ic_stop)
-//                    mediaPlayer = MediaPlayer().apply {
-//                        setAudioAttributes(
-//                            AudioAttributes.Builder()
-//                                .setContentType(AudioAttributes.CONTENT_TYPE_MUSIC)
-//                                .setUsage(AudioAttributes.USAGE_MEDIA)
-//                                .build()
-//                        )
-//                        mediaPlayer?.setDataSource(audios!![currentPosition])
-//                        mediaPlayer?.prepare() // might take long! (for buffering, etc)
-//                        mediaPlayer?.start()
-//                    }
-//                }
-//            }
-//        }
-//
-//        binding.ivPlayBack.setOnClickListener {
-//            isPlaying = false
-//            binding.tvSongTitle.text = titles[currentPosition-1]
-//        }
-//
-//        binding.ivPlayNext.setOnClickListener {
-//            isPlaying = false
-//        }
+        binding.ivPlayBack.setOnClickListener {
+            isPlaying = false
+            mediaPlayer.release()
+            if(currentPosition == 0) currentPosition = melonItems[0].tracks.size-1
+            else currentPosition -= 1
+            binding.tvSongTitle.text = melonItems[0].tracks[currentPosition].name
+        }
+
+        binding.ivPlayNext.setOnClickListener {
+            isPlaying = false
+            mediaPlayer.release()
+            if(currentPosition == melonItems[0].tracks.size-1) currentPosition = 0
+            else currentPosition += 1
+            binding.tvSongTitle.text = melonItems[0].tracks[currentPosition].name
+        }
     }
 
     private fun playMelonItem(audio: String) {
         mediaPlayer = MediaPlayer.create(this@DetailActivity, Uri.parse(audio))
         mediaPlayer.start()
+    }
+
+    override fun onPause() {
+        super.onPause()
+        Log.d("detailActivity","onPause")
+    }
+
+    override fun onStop() {
+        super.onStop()
+        Log.d("detailActivity","onStop")
+    }
+
+    override fun onDestroy() {
+        super.onDestroy()
+        Log.d("detailActivity","onDestroy")
+        mediaPlayer.release()
     }
 }

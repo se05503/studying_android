@@ -37,9 +37,6 @@ class MelonAdapter(
                     audios.add(trackItem.audio)
                 }
                 val intent = Intent(context, DetailActivity::class.java)
-//                intent.putExtra("thumbnail", melonItems[0].image) // 서버에서 내려오는 이미지는 한개임
-//                intent.putExtra("titles", titles)
-//                intent.putExtra("audios", audios)
                 // 이전곡, 다음곡을 재생하기 위해서는 리스트 형태로 데이터를 넘겨야 함 (한개만 넘기면 안됨)
                 // intent에 List 는 안되지만, ArrayList 는 넣을 수 있다.
                 intent.putExtra("melonItems", melonItems as Serializable) // MelonItem 의 property 를 다 분해해서 넘김
