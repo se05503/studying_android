@@ -16,3 +16,4 @@ rootProject.name = "FastCampus"
 include ':app'
 include ':youtube'
 include ':melone'
+include ':instagram'
