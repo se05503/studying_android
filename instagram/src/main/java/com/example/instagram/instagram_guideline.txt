@@ -29,6 +29,10 @@ Body 에서 username, password1, password2 보내기
 - token 을 서버에게 전달하는 경우(GET)
     - Body 말고 Headers 에서 Authorization(key) 의 value 값으로 "token ~~~~" 이렇게 적어서 서버에 요청하면 됨.
 
+핸드폰마다 가로 세로 비율은 다르다. dp 설정을 해도, 핸드폰마다 그 크기가 달라서 다르게 보일 수 있다.
+
+
+
 
 
 
