@@ -5,7 +5,6 @@ import android.os.Bundle
 import android.util.Log
 import android.widget.Toast
 import com.example.instagram.databinding.ActivityInstaJoinBinding
-import com.google.android.material.snackbar.Snackbar
 import retrofit2.Call
 import retrofit2.Callback
 import retrofit2.Response
@@ -41,14 +40,20 @@ class InstaJoinActivity : AppCompatActivity() {
                 val userInfo = HashMap<String, Any>()
                 userInfo.put("username", id)
                 userInfo.put("password1", password)
-                userInfo.put("password2", passwordCheck) //
-                retrofitService.registerUserInfo(userInfo).enqueue(object: Callback<Token> {
-                    override fun onResponse(call: Call<Token>, response: Response<Token>) {
-                        TODO("Not yet implemented")
+                userInfo.put("password2", passwordCheck)
+                retrofitService.registerUserInfo(userInfo).enqueue(object: Callback<SignupToken> {
+                    override fun onResponse(call: Call<SignupToken>, response: Response<SignupToken>) {
+                        if (response.isSuccessful) {
+                            // 서버에 새로운 아이디와 비밀번호 등록함
+                            Toast.makeText(this@InstaJoinActivity, "가입이 완료되셨습니다!", Toast.LENGTH_SHORT).show()
+                            val response = response.body()
+                            val token = response?.token
+                            Log.d("Sign Up Success", token!!)
+                        }
                     }
 
-                    override fun onFailure(call: Call<Token>, t: Throwable) {
-                        TODO("Not yet implemented")
+                    override fun onFailure(call: Call<SignupToken>, t: Throwable) {
+                        Log.d("onFailure", t.message!!)
                     }
 
                 })
@@ -57,7 +62,6 @@ class InstaJoinActivity : AppCompatActivity() {
                 intent.putExtra("new_id", id)
                 intent.putExtra("new_password", password)
                 setResult(RESULT_OK, intent)
-                Toast.makeText(this@InstaJoinActivity, "가입이 완료되셨습니다!", Toast.LENGTH_SHORT).show()
                 finish()
             }
         }
