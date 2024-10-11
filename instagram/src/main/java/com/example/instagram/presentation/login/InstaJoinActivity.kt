@@ -1,9 +1,11 @@
-package com.example.instagram
+package com.example.instagram.presentation.login
 
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import android.util.Log
 import android.widget.Toast
+import com.example.instagram.network.NetworkService
+import com.example.instagram.SignupToken
 import com.example.instagram.databinding.ActivityInstaJoinBinding
 import retrofit2.Call
 import retrofit2.Callback
@@ -24,7 +26,6 @@ class InstaJoinActivity : AppCompatActivity() {
             .build()
 
         val retrofitService = retrofit.create(NetworkService::class.java)
-
 
         binding.btnJoin.setOnClickListener {
             // 비밀번호 예외 처리

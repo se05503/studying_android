@@ -6,7 +6,7 @@
     android:orientation="vertical"
     android:padding="24dp"
     android:gravity="center_horizontal"
-    tools:context=".InstaLoginActivity">
+    tools:context=".presentation.login.InstaLoginActivity">
 
     <ImageView
         android:layout_width="300dp"

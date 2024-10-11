@@ -1,5 +1,6 @@
-package com.example.instagram
+package com.example.instagram.network
 
+import com.example.instagram.SignupToken
 import retrofit2.Call
 import retrofit2.http.FieldMap
 import retrofit2.http.FormUrlEncoded

@@ -1,13 +1,12 @@
-package com.example.instagram
+package com.example.instagram.presentation.login
 
-import android.app.Activity
 import android.content.Intent
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
-import android.widget.TextView
 import androidx.activity.result.ActivityResultLauncher
 import androidx.activity.result.contract.ActivityResultContracts
 import com.example.instagram.databinding.ActivityInstaLoginBinding
+import com.example.instagram.presentation.home.InstaMainActivity
 import java.io.File
 
 class InstaLoginActivity : AppCompatActivity() {
@@ -32,6 +31,12 @@ class InstaLoginActivity : AppCompatActivity() {
         binding.tvSignUp.setOnClickListener {
             val intent = Intent(this@InstaLoginActivity, InstaJoinActivity::class.java)
             requestLauncher.launch(intent)
+        }
+
+        binding.btnLogin.setOnClickListener {
+            val intent = Intent(this@InstaLoginActivity, InstaMainActivity::class.java)
+            startActivity(intent)
+            // 해당 부분 토큰과 연결시켜서 다시 구현하기
         }
 
         // SecurityException resolve
