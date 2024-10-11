@@ -11,17 +11,19 @@ class InstaMainActivity : AppCompatActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_insta_main)
+
         val viewpager2 = findViewById<ViewPager2>(R.id.viewpager2)
         val tabLayout = findViewById<TabLayout>(R.id.tabLayout)
+        val tabText = listOf("feed", "post", "profile")
+        val tabIcons = listOf(R.drawable.ic_feed, R.drawable.ic_post, R.drawable.ic_profile)
 
         viewpager2.adapter = InstaViewPagerAdapter(this@InstaMainActivity)
-        tabLayout.addTab(tabLayout.newTab().setText("feed").setIcon(R.drawable.ic_feed), 0, true)
-        tabLayout.addTab(tabLayout.newTab().setText("post").setIcon(R.drawable.ic_post), 1, false)
-        tabLayout.addTab(tabLayout.newTab().setText("profile").setIcon(R.drawable.ic_profile), 2, false)
 
-//        TabLayoutMediator(tabLayout, viewpager2) { _, _ ->
-//            // 무슨 처리를 해야하지? 이미 text 랑 icon 위에서 설정했는데
-//        }.attach()
+        TabLayoutMediator(tabLayout, viewpager2) { tab, position ->
+            tab.text = tabText[position]
+            tab.setIcon(tabIcons[position])
+        }.attach()
+
 //        tabLayout.addOnTabSelectedListener()
     }
 }
