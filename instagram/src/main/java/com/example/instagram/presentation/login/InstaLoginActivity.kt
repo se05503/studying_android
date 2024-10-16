@@ -3,10 +3,18 @@ package com.example.instagram.presentation.login
 import android.content.Intent
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
+import android.util.Log
+import android.widget.Toast
 import androidx.activity.result.ActivityResultLauncher
 import androidx.activity.result.contract.ActivityResultContracts
+import com.example.instagram.LoginToken
+import com.example.instagram.Utils
 import com.example.instagram.databinding.ActivityInstaLoginBinding
 import com.example.instagram.presentation.home.InstaMainActivity
+import retrofit2.Call
+import retrofit2.Callback
+import retrofit2.Response
+import retrofit2.Retrofit
 import java.io.File
 
 class InstaLoginActivity : AppCompatActivity() {
@@ -16,6 +24,9 @@ class InstaLoginActivity : AppCompatActivity() {
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
+        // SecurityException resolve
+        codeCacheDir.setReadOnly()
+
         binding = ActivityInstaLoginBinding.inflate(layoutInflater)
         setContentView(binding.root)
 
@@ -34,15 +45,30 @@ class InstaLoginActivity : AppCompatActivity() {
         }
 
         binding.btnLogin.setOnClickListener {
-            val intent = Intent(this@InstaLoginActivity, InstaMainActivity::class.java)
-            startActivity(intent)
-            // 해당 부분 토큰과 연결시켜서 다시 구현하기
+            val userInfo = HashMap<String,Any>()
+            userInfo.put("username", binding.etId.text.toString())
+            userInfo.put("password", binding.etPassword.text.toString())
+            Utils().retrofitService.checkUserLoginInfo(userInfo).enqueue(object: Callback<LoginToken> {
+                override fun onResponse(call: Call<LoginToken>, response: Response<LoginToken>) {
+                    Log.d("message", response.message())
+                    if(response.isSuccessful) {
+                        Toast.makeText(this@InstaLoginActivity, "로그인 성공했습니다!",Toast.LENGTH_SHORT).show()
+                        val response = response.body()
+                        val token = response?.token
+                        val intent = Intent(this@InstaLoginActivity, InstaMainActivity::class.java)
+                        intent.putExtra("userToken", token)
+                        startActivity(intent)
+                    } else {
+                        Toast.makeText(this@InstaLoginActivity, "로그인 정보가 없습니다!", Toast.LENGTH_SHORT).show()
+                    }
+                }
+
+                override fun onFailure(call: Call<LoginToken>, t: Throwable) {
+                    Log.d("onFailure", t.message!!)
+                    Toast.makeText(this@InstaLoginActivity, "서버 연결이 불안정합니다!", Toast.LENGTH_SHORT).show()
+                }
+            })
         }
-
-        // SecurityException resolve
-        val dexOutputDir: File = codeCacheDir
-        dexOutputDir.setReadOnly()
-
     }
 
 }
