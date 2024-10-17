@@ -11,7 +11,7 @@
     <ImageView
         android:layout_width="300dp"
         android:layout_height="300dp"
-        android:src="@drawable/ic_outstagram"/>
+        android:src="@drawable/logo_outstagram"/>
 
     <EditText
         android:id="@+id/et_id"

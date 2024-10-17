@@ -1,6 +1,7 @@
 package com.example.instagram.network
 
 import com.example.instagram.LoginToken
+import com.example.instagram.PostItem
 import com.example.instagram.SignupToken
 import retrofit2.Call
 import retrofit2.http.FieldMap
@@ -20,4 +21,7 @@ interface NetworkService {
     fun checkUserLoginInfo(
         @FieldMap params: HashMap<String, Any> // @FieldMap 이 무슨 의미였지?
     ): Call<LoginToken>
+
+    @GET("instagram/post/list/all/")
+    fun getInstaPosts(): Call<List<PostItem>>
 }

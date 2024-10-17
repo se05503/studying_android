@@ -45,29 +45,37 @@ class InstaLoginActivity : AppCompatActivity() {
         }
 
         binding.btnLogin.setOnClickListener {
-            val userInfo = HashMap<String,Any>()
-            userInfo.put("username", binding.etId.text.toString())
-            userInfo.put("password", binding.etPassword.text.toString())
-            Utils().retrofitService.checkUserLoginInfo(userInfo).enqueue(object: Callback<LoginToken> {
-                override fun onResponse(call: Call<LoginToken>, response: Response<LoginToken>) {
-                    Log.d("message", response.message())
-                    if(response.isSuccessful) {
-                        Toast.makeText(this@InstaLoginActivity, "로그인 성공했습니다!",Toast.LENGTH_SHORT).show()
-                        val response = response.body()
-                        val token = response?.token
-                        val intent = Intent(this@InstaLoginActivity, InstaMainActivity::class.java)
-                        intent.putExtra("userToken", token)
-                        startActivity(intent)
-                    } else {
-                        Toast.makeText(this@InstaLoginActivity, "로그인 정보가 없습니다!", Toast.LENGTH_SHORT).show()
-                    }
-                }
+            val username = binding.etId.text.toString()
+            val password = binding.etPassword.text.toString()
 
-                override fun onFailure(call: Call<LoginToken>, t: Throwable) {
-                    Log.d("onFailure", t.message!!)
-                    Toast.makeText(this@InstaLoginActivity, "서버 연결이 불안정합니다!", Toast.LENGTH_SHORT).show()
-                }
-            })
+            if(username.isBlank()||password.isBlank()) {
+                Toast.makeText(this@InstaLoginActivity, "정보를 입력해주세요!", Toast.LENGTH_SHORT).show()
+            } else {
+                val userInfo = HashMap<String,Any>()
+                userInfo.put("username", username)
+                userInfo.put("password", password)
+                Utils().retrofitService.checkUserLoginInfo(userInfo).enqueue(object: Callback<LoginToken> {
+                    override fun onResponse(call: Call<LoginToken>, response: Response<LoginToken>) {
+                        Log.d("message", response.message())
+                        if(response.isSuccessful) {
+                            Toast.makeText(this@InstaLoginActivity, "로그인 성공했습니다!",Toast.LENGTH_SHORT).show()
+                            val response = response.body()
+                            val token = response?.token
+                            val intent = Intent(this@InstaLoginActivity, InstaMainActivity::class.java)
+                            intent.putExtra("userToken", token)
+                            startActivity(intent)
+                        } else {
+                            Toast.makeText(this@InstaLoginActivity, "회원 정보가 없습니다!", Toast.LENGTH_SHORT).show()
+                        }
+                    }
+
+                    override fun onFailure(call: Call<LoginToken>, t: Throwable) {
+                        // 와이파이를 연결하지 않은 상태로 서버 요청을 하는 경우
+                        Log.d("onFailure", t.message!!)
+                        Toast.makeText(this@InstaLoginActivity, "서버 연결이 불안정합니다!", Toast.LENGTH_SHORT).show()
+                    }
+                })
+            }
         }
     }
 
