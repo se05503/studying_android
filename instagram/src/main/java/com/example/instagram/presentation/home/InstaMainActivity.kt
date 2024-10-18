@@ -6,11 +6,14 @@ import androidx.viewpager2.widget.ViewPager2
 import com.example.instagram.R
 import com.google.android.material.tabs.TabLayout
 import com.google.android.material.tabs.TabLayoutMediator
+import java.io.File
 
 class InstaMainActivity : AppCompatActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_insta_main)
+
+        codeCacheDir.setReadOnly()
 
         val viewpager2 = findViewById<ViewPager2>(R.id.viewpager2)
         val tabLayout = findViewById<TabLayout>(R.id.tabLayout)

@@ -9,15 +9,15 @@
     tools:context=".presentation.login.InstaJoinActivity">
 
     <ImageView
-        android:layout_width="300dp"
-        android:layout_height="300dp"
-        android:src="@drawable/ic_outstagram"/>
+        android:layout_width="250dp"
+        android:layout_height="150dp"
+        android:src="@drawable/logo_outstagram"/>
 
     <EditText
         android:id="@+id/et_id"
         android:layout_width="match_parent"
         android:layout_height="60dp"
-        android:layout_marginTop="20dp"
+        android:layout_marginTop="80dp"
         android:hint="아이디"
         android:textColorHint="@android:color/darker_gray"
         android:paddingStart="20dp"
@@ -51,7 +51,7 @@
         android:layout_height="60dp"
         android:backgroundTint="#5D72EA"
         android:textStyle="bold"
-        android:layout_marginTop="70dp"
+        android:layout_marginTop="150dp"
         android:text="가입"/>
 
 </androidx.appcompat.widget.LinearLayoutCompat>

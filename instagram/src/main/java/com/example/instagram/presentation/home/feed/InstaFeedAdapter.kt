@@ -1,15 +1,19 @@
 package com.example.instagram.presentation.home.feed
 
 import android.content.Context
+import android.text.format.DateFormat
+import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.ImageView
 import android.widget.TextView
+import android.widget.Toast
 import androidx.recyclerview.widget.RecyclerView
 import com.bumptech.glide.Glide
 import com.example.instagram.PostItem
 import com.example.instagram.R
+import java.util.*
 
 class InstaFeedAdapter(
     val postItems: List<PostItem>,
@@ -33,6 +37,18 @@ class InstaFeedAdapter(
             postLikeCount = view.findViewById(R.id.tv_heart_count)
             postContent = view.findViewById(R.id.tv_content)
             postDate = view.findViewById(R.id.tv_post_date)
+
+            postHeart.setOnClickListener {
+                if(postItems[adapterPosition].isHeartClick) {
+                    postItems[adapterPosition].isHeartClick = false
+                    postHeart.setImageResource(R.drawable.ic_blank_heart)
+                    Toast.makeText(context, "좋아요가 해제되었습니다!", Toast.LENGTH_SHORT).show()
+                } else {
+                    postItems[adapterPosition].isHeartClick = true
+                    postHeart.setImageResource(R.drawable.ic_full_heart)
+                    Toast.makeText(context, "좋아요가 눌렸습니다!", Toast.LENGTH_SHORT).show()
+                }
+            }
         }
     }
 
@@ -51,6 +67,10 @@ class InstaFeedAdapter(
         Glide.with(context).load(postItems[position].postImage).into(holder.postImage)
         holder.postLikeCount.text = "${postItems[position].like_count}명이 게시물을 좋아합니다."
         holder.postContent.text = postItems[position].content
+//        val rawDate = postItems[position].postDate
+//        val simpleDateFormat = SimpleDateFormat(rawDate) // 에러
+//        val transformedDate = DateFormat.format(rawDate, Date())
+//        Log.d("date", transformedDate.toString())
         holder.postDate.text = postItems[position].postDate // 날짜 변환하는 방법 알아보기
     }
 }

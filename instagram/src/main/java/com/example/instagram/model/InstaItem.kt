@@ -21,7 +21,8 @@ data class PostItem(
     val content: String, // 강의에서 쓴 변수
     @SerializedName("image") val postImage: String, // 강의에서 쓴 변수
     val like_count: Int, // 인스타 어플 참고
-    val owner_profile: PostOwnerInfo
+    val owner_profile: PostOwnerInfo,
+    var isHeartClick: Boolean = false // 서버에서 받아오는 값 X
 )
 
 data class PostOwnerInfo(

@@ -1,14 +1,20 @@
 package com.example.instagram.presentation.home.feed
 
 import android.os.Bundle
+import android.util.Log
 import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import android.widget.Toast
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.example.instagram.PostItem
 import com.example.instagram.R
+import com.example.instagram.Utils
 import com.example.instagram.databinding.FragmentInstaFeedBinding
+import retrofit2.Call
+import retrofit2.Callback
+import retrofit2.Response
 
 // TODO: Rename parameter arguments, choose names that match
 // the fragment initialization parameters, e.g. ARG_ITEM_NUMBER
@@ -46,9 +52,32 @@ class InstaFeedFragment : Fragment() {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
         // 어느 생명주기에 작성해야하지?
-        val postItems = ArrayList<PostItem>()
-        binding.recyclerviewFeed.layoutManager = LinearLayoutManager(context) // context 와 requireContext 의 차이?
-        binding.recyclerviewFeed.adapter = InstaFeedAdapter(postItems, requireContext())
+
+        // 서버 데이터 받아오기
+        Utils().retrofitService.getInstaPosts().enqueue(object: Callback<List<PostItem>> {
+            override fun onResponse(
+                call: Call<List<PostItem>>,
+                response: Response<List<PostItem>>
+            ) {
+                Log.d("server response", response.message())
+                if(response.isSuccessful) {
+                    val postItems = response.body()
+                    binding.recyclerviewFeed.adapter = InstaFeedAdapter(postItems!!, requireContext())
+                } else {
+                    Toast.makeText(context, "else 문에 걸렸습니다", Toast.LENGTH_SHORT).show()
+                }
+            }
+
+            override fun onFailure(call: Call<List<PostItem>>, t: Throwable) {
+                Log.d("onFailure", t.message!!)
+                Toast.makeText(context, "서버 연결이 불안정합니다", Toast.LENGTH_SHORT).show()
+            }
+
+        })
+
+        binding.fab.setOnClickListener {
+            binding.recyclerviewFeed.smoothScrollToPosition(0)
+        }
     }
 
     companion object {
