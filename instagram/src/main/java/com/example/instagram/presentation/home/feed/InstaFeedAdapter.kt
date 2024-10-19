@@ -70,18 +70,14 @@ class InstaFeedAdapter(
         Glide.with(context).load(postItems[position].postImage).into(holder.postImage)
         holder.postLikeCount.text = "${postItems[position].like_count}명이 게시물을 좋아합니다."
         holder.postContent.text = postItems[position].content
-        val rawDate = postItems[position].postDate
-
-        val beforeDateFormat = SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ss.SSS'Z'", Locale.getDefault())
-        val beforeDate = beforeDateFormat.parse(rawDate)
 
         // HH시 mm분 ss초 → 나중에 필요하면 추가하기
         // 현재 시간이랑 비교해서 "~전" 형식으로 바꾸기
+        val rawDate = postItems[position].postDate
+        val beforeDateFormat = SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ss.SSS'Z'", Locale.getDefault())
+        val beforeDate = beforeDateFormat.parse(rawDate)
         val afterDateFormat = SimpleDateFormat("yyyy년 MM월 dd일", Locale.getDefault())
         val convertedDate = afterDateFormat.format(beforeDate)
-
-        Log.d("date", convertedDate)
-
         holder.postDate.text = convertedDate
     }
 }

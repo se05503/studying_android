@@ -7,11 +7,18 @@
     android:orientation="vertical"
     tools:context=".presentation.home.InstaMainActivity">
 
-    <androidx.viewpager2.widget.ViewPager2
-        android:id="@+id/viewpager2"
+    <ImageView
+        android:id="@+id/iv_logo"
+        android:layout_width="match_parent"
+        android:layout_height="50dp"
+        android:src="@drawable/logo_outstagram"/>
+
+    <androidx.fragment.app.FragmentContainerView
+        android:id="@+id/fragmentContainerView"
         android:layout_width="match_parent"
         android:layout_height="0dp"
-        android:layout_weight="1"/>
+        android:layout_weight="1"
+        android:name="com.example.instagram.presentation.home.feed.InstaFeedFragment"/>
 
     <com.google.android.material.tabs.TabLayout
         android:id="@+id/tabLayout"
