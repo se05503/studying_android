@@ -3,6 +3,7 @@ package com.example.instagram.presentation.home.feed
 import android.content.Context
 import android.text.format.DateFormat
 import android.util.Log
+import java.util.Calendar
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -61,16 +62,18 @@ class InstaFeedAdapter(
         return postItems.size
     }
 
+    // onBindViewHolder 는 recyclerview 의 item 항목 1개가 뷰에 보일때마다 호출되는구나!
     override fun onBindViewHolder(holder: InstaFeedViewHolder, position: Int) {
         Glide.with(context).load(postItems[position].owner_profile.userImage).into(holder.userImage)
         holder.userName.text = postItems[position].owner_profile.username
         Glide.with(context).load(postItems[position].postImage).into(holder.postImage)
         holder.postLikeCount.text = "${postItems[position].like_count}명이 게시물을 좋아합니다."
         holder.postContent.text = postItems[position].content
-//        val rawDate = postItems[position].postDate
-//        val simpleDateFormat = SimpleDateFormat(rawDate) // 에러
-//        val transformedDate = DateFormat.format(rawDate, Date())
-//        Log.d("date", transformedDate.toString())
+        val rawDate = postItems[position].postDate
+        val calendar = Calendar.getInstance()
+        calendar.set(Calendar.YEAR, Calendar.MONTH, Calendar.DAY_OF_MONTH, Calendar.HOUR_OF_DAY, Calendar.MINUTE, Calendar.SECOND)
+        val transformedDate = DateFormat.format(rawDate, calendar)
+        Log.d("date", transformedDate.toString())
         holder.postDate.text = postItems[position].postDate // 날짜 변환하는 방법 알아보기
     }
 }
