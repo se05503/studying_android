@@ -63,6 +63,14 @@ class InstaFeedFragment : Fragment() {
                 if(response.isSuccessful) {
                     val postItems = response.body()
                     binding.recyclerviewFeed.adapter = InstaFeedAdapter(postItems!!, requireContext())
+
+                    // 아래 코드를 해당 위치 (서버 통신 body 내부) 에 놓는 것이 적절할까?
+                    binding.fabUp.setOnClickListener {
+                        binding.recyclerviewFeed.scrollToPosition(0)
+                    }
+                    binding.fabDown.setOnClickListener {
+                        binding.recyclerviewFeed.scrollToPosition(postItems.size-1)
+                    }
                 } else {
                     Toast.makeText(context, "else 문에 걸렸습니다", Toast.LENGTH_SHORT).show()
                 }
@@ -74,10 +82,6 @@ class InstaFeedFragment : Fragment() {
             }
 
         })
-
-        binding.fab.setOnClickListener {
-            binding.recyclerviewFeed.smoothScrollToPosition(0)
-        }
     }
 
     companion object {
