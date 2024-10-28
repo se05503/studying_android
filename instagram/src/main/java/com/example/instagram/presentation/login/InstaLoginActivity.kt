@@ -62,13 +62,15 @@ class InstaLoginActivity : AppCompatActivity() {
                             Toast.makeText(this@InstaLoginActivity, "로그인 성공했습니다!",Toast.LENGTH_SHORT).show()
                             val response = response.body()
                             val token = response?.token
+                            val userId = response?.userId
                             val intent = Intent(this@InstaLoginActivity, InstaMainActivity::class.java)
 //                            intent.putExtra("userToken", token)
                             // 앱 내부 저장소인 sharedpreference 에 현재 로그인한 유저의 정보(토큰)을 저장하자
                             // Utils 로 한번 빼볼려고 했는데 getSharedPreferences 가 접근이 안된다.
-                            val sharedPreference = getSharedPreferences("user_token", Context.MODE_PRIVATE)
+                            val sharedPreference = getSharedPreferences("user_info", Context.MODE_PRIVATE)
                             val editor = sharedPreference.edit()
                             editor.putString("current_login_user_token", token)
+                            editor.putInt("current_login_user_id",userId!!)
                             editor.commit()
                             startActivity(intent)
                         } else {

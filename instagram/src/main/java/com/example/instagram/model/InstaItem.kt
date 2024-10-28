@@ -6,12 +6,13 @@ class InstaItem {
 }
 
 data class  SignupToken(
-    val id: Int?, // 얘는 언제 필요한거지?
+    @SerializedName("id") val userId: Int?, // 얘는 언제 필요한거지?
     val username: String?, // 얘는 언제 필요한거지?
     val token: String? // 얘가 제일 중요한 것 같음
 )
 
 data class LoginToken(
+    @SerializedName("id") val userId: Int,
     val token: String
 )
 
@@ -29,5 +30,5 @@ data class PostOwnerInfo(
     @SerializedName("id") val userId: Int, // 아직 어떻게 활용해야할 지 감이 안옴
     val username: String, // 강의에서 쓴 변수
     @SerializedName("image") val userImage: String, // 강의에서 쓴 변수
-    val user: Int // user id 랑 같은 속성인 것 같음. 안쓸 것 같음.
+    @SerializedName("user") val _userId: Int // user id 랑 같은 속성인 것 같음. 안쓸 것 같음.
 )

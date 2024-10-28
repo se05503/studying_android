@@ -5,13 +5,12 @@
     android:layout_height="match_parent"
     android:orientation="vertical"
     android:gravity="center_horizontal"
-    tools:context=".presentation.home.profile.InstaProfileFragment">
-
+    tools:context=".presentation.home.profile.InstaProfileChangeActivity">
     <TextView
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginTop="20dp"
-        android:text="프로필 편집"
+        android:text="프로필 미리보기"
         android:textStyle="bold"
         android:textSize="30sp"/>
 
@@ -19,12 +18,14 @@
         android:id="@+id/iv_edit_profile"
         android:layout_width="300dp"
         android:layout_height="300dp"
+        android:background="@drawable/bg_round"
         android:src="@drawable/ic_user"/>
+
+    <!-- 왜 round 가 안들어가지? -->
 
     <androidx.appcompat.widget.AppCompatButton
         android:id="@+id/btn_change_profile"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text="변경하기"/>
-
+        android:text="완료"/>
 </androidx.appcompat.widget.LinearLayoutCompat>

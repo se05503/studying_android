@@ -1,11 +1,17 @@
 package com.example.instagram.presentation.home.profile
 
+import android.content.Intent
+import android.graphics.BitmapFactory
 import android.os.Bundle
+import android.provider.MediaStore
 import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import androidx.activity.result.contract.ActivityResultContracts
 import com.example.instagram.R
+import com.example.instagram.databinding.FragmentInstaProfileBinding
+import com.example.instagram.presentation.home.InstaMainActivity
 
 // TODO: Rename parameter arguments, choose names that match
 // the fragment initialization parameters, e.g. ARG_ITEM_NUMBER
@@ -21,6 +27,7 @@ class InstaProfileFragment : Fragment() {
     // TODO: Rename and change types of parameters
     private var param1: String? = null
     private var param2: String? = null
+    lateinit var binding: FragmentInstaProfileBinding
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -35,7 +42,16 @@ class InstaProfileFragment : Fragment() {
         savedInstanceState: Bundle?
     ): View? {
         // Inflate the layout for this fragment
-        return inflater.inflate(R.layout.fragment_insta_profile, container, false)
+        binding = FragmentInstaProfileBinding.inflate(inflater, container, false)
+        return binding.root
+    }
+
+    override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
+        super.onViewCreated(view, savedInstanceState)
+        binding.btnChangeProfile.setOnClickListener {
+            val intent = Intent(requireContext(), InstaProfileChangeActivity::class.java) // context 와 requireContext 의 차이가 뭐지?
+            startActivity(intent)
+        }
     }
 
     companion object {
