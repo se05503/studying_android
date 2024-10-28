@@ -26,6 +26,10 @@ data class PostItem(
     var isHeartClick: Boolean = false // 서버에서 받아오는 값 X
 )
 
+data class UserInfo(
+    val profile: PostOwnerInfo
+)
+
 data class PostOwnerInfo(
     @SerializedName("id") val userId: Int, // 아직 어떻게 활용해야할 지 감이 안옴
     val username: String, // 강의에서 쓴 변수

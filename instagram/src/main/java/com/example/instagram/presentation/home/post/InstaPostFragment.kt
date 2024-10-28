@@ -85,7 +85,7 @@ class InstaPostFragment : Fragment() {
             val header = HashMap<String, String>()
             // requireContext vs requireActivity ?
             val sharedPreference =
-                requireContext().getSharedPreferences("user_token", Context.MODE_PRIVATE)
+                requireContext().getSharedPreferences("user_info", Context.MODE_PRIVATE)
             val userToken = sharedPreference.getString(
                 "current_login_user_token",
                 "user token is not exist"

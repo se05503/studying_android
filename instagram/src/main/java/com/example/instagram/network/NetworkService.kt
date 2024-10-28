@@ -3,6 +3,7 @@ package com.example.instagram.network
 import com.example.instagram.LoginToken
 import com.example.instagram.PostItem
 import com.example.instagram.SignupToken
+import com.example.instagram.UserInfo
 import okhttp3.MultipartBody
 import okhttp3.RequestBody
 import retrofit2.Call
@@ -18,6 +19,15 @@ import retrofit2.http.Part
 import retrofit2.http.Path
 
 interface NetworkService {
+
+    @GET("instagram/post/list/all/")
+    fun getInstaPosts(): Call<List<PostItem>>
+
+    @GET("user/userInfo/")
+    fun getUserInfo(
+        @HeaderMap headers: Map<String, String> // user token
+    ): Call<UserInfo>
+
     @POST("user/signup/")
     @FormUrlEncoded
     fun registerUserInfo(
@@ -29,9 +39,6 @@ interface NetworkService {
     fun checkUserLoginInfo(
         @FieldMap params: HashMap<String, Any> // @FieldMap 이 무슨 의미였지?
     ): Call<LoginToken>
-
-    @GET("instagram/post/list/all/")
-    fun getInstaPosts(): Call<List<PostItem>>
 
     @Multipart // 이미지를 서버에 보낼때 필요한 어노테이션
     @POST("instagram/post/")
