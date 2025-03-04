@@ -8,6 +8,13 @@
         android:roundIcon="@mipmap/ic_launcher_round"
         android:supportsRtl="true"
         android:theme="@style/Theme.FastCampus">
+
+        <service
+            android:name=".MediaPlayerService"
+            android:enabled="true"
+            android:exported="false"> <!-- exported = true → 다른 앱에서도 해당 서비스를 실행할 수 있음, false 면 다른 앱에서 해당 서비스를 실행할 수 없음 -->
+        </service>
+
         <activity
             android:name=".MainActivity"
             android:exported="true">

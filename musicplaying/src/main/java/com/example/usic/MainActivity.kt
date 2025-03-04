@@ -1,5 +1,6 @@
 package com.example.usic
 
+import android.content.Intent
 import android.media.MediaPlayer
 import android.os.Bundle
 import androidx.activity.enableEdgeToEdge
@@ -11,7 +12,6 @@ import com.example.usic.databinding.ActivityMainBinding
 class MainActivity : AppCompatActivity() {
 
     private lateinit var binding: ActivityMainBinding
-    private var mediaPlayer: MediaPlayer? = null
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -39,21 +39,19 @@ class MainActivity : AppCompatActivity() {
     }
 
     private fun play() {
-        if(mediaPlayer == null) {
-            mediaPlayer = MediaPlayer.create(this, R.raw.popsong).apply {
-                isLooping = true
-            }
-        }
-        mediaPlayer?.start()
+        // 서비스 실행
+        val intent = Intent(this, MediaPlayerService::class.java)
+            .apply { action = MEDIA_PLAYER_PLAY }
+        startService(intent)
     }
 
     private fun pause() {
-        mediaPlayer?.pause()
+        val intent = Intent(this, MediaPlayerService::class.java).apply { action = MEDIA_PLAYER_PAUSE }
+        startService(intent)
     }
 
     private fun stop() {
-        mediaPlayer?.stop()
-        mediaPlayer?.release() // 더이상 사용하지 않는 경우 메모리에서 해제
-        mediaPlayer = null
+        val intent = Intent(this, MediaPlayerService::class.java).apply { action = MEDIA_PLAYER_STOP }
+        startService(intent)
     }
 }
