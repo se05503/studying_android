@@ -6,6 +6,7 @@ import android.app.NotificationManager
 import android.app.PendingIntent
 import android.app.Service
 import android.content.Intent
+import android.content.IntentFilter
 import android.graphics.drawable.Icon
 import android.media.MediaPlayer
 import android.os.IBinder
@@ -13,6 +14,7 @@ import android.os.IBinder
 class MediaPlayerService : Service() {
 
     private var mediaPlayer: MediaPlayer ?= null
+    private val receiver = MyReceiver()
 
     override fun onBind(intent: Intent): IBinder? {
         // 바인드 서비스가 아닌 포그라운드 서비스를 실습하기 때문에 해당 함수는 구현 x
@@ -22,6 +24,7 @@ class MediaPlayerService : Service() {
     override fun onCreate() {
         super.onCreate()
         createNotificationChannel()
+        initReceiver()
 
         val playIcon = Icon.createWithResource(baseContext, R.drawable.ic_play)
         val pauseIcon = Icon.createWithResource(baseContext, R.drawable.ic_pause)
@@ -70,6 +73,13 @@ class MediaPlayerService : Service() {
         startForeground(100, notification)
     }
 
+    private fun initReceiver() {
+        val filter = IntentFilter().apply {
+            addAction(Intent.ACTION_POWER_CONNECTED)
+        }
+        registerReceiver(receiver, filter)
+    }
+
     private fun createNotificationChannel() {
         val channel = NotificationChannel(CHANNEL_ID, CHANNEL_NAME, NotificationManager.IMPORTANCE_DEFAULT)
         val notificationManager = baseContext.getSystemService(NotificationManager::class.java)
@@ -105,6 +115,7 @@ class MediaPlayerService : Service() {
         mediaPlayer?.stop()
         mediaPlayer?.release()
         mediaPlayer = null
+        unregisterReceiver(receiver)
         super.onDestroy()
     }
 }
