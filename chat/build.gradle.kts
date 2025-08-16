@@ -1,6 +1,7 @@
 plugins {
     id("com.android.application")
     id("org.jetbrains.kotlin.android")
+    id("com.google.gms.google-services") // Google services Gradle plugin
 }
 
 android {
@@ -36,7 +37,6 @@ android {
 }
 
 dependencies {
-
     implementation("androidx.core:core-ktx:1.17.0")
     implementation(platform("org.jetbrains.kotlin:kotlin-bom:1.8.0"))
     implementation("androidx.appcompat:appcompat:1.7.1")
@@ -44,4 +44,8 @@ dependencies {
     testImplementation("junit:junit:4.13.2")
     androidTestImplementation("androidx.test.ext:junit:1.3.0")
     androidTestImplementation("androidx.test.espresso:espresso-core:3.7.0")
+    implementation(platform("com.google.firebase:firebase-bom:34.1.0")) // Firebase BoM
+    implementation("com.google.firebase:firebase-auth") // Firebase Authentication library
+    implementation("com.google.firebase:firebase-database") // Realtime Database library
+    implementation("com.google.firebase:firebase-messaging") // firebase cloud messaging
 }
