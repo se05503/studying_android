@@ -11,13 +11,14 @@
           <set>
             <option value="$PROJECT_DIR$" />
             <option value="$PROJECT_DIR$/app" />
+            <option value="$PROJECT_DIR$/chat" />
+            <option value="$PROJECT_DIR$/gallery" />
             <option value="$PROJECT_DIR$/instagram" />
             <option value="$PROJECT_DIR$/melone" />
             <option value="$PROJECT_DIR$/musicplaying" />
             <option value="$PROJECT_DIR$/youtube" />
           </set>
         </option>
-        <option name="resolveExternalAnnotations" value="false" />
       </GradleProjectSettings>
     </option>
   </component>
